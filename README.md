@@ -24,6 +24,10 @@ To use Primord in your Discord server, follow these steps:
 Once the bot is running, you can use the following commands:
 - `/primosub`: Toggle subscription to gift code notifications.
 
+## Screenshot
+![image](https://user-images.githubusercontent.com/50010805/220254846-03a7b05e-e8e9-4be7-b4c7-8d75abf48061.png)
+
+
 ## Contributing
 Contributions and PR(s) are welcome!
 
