@@ -11,7 +11,6 @@ const client = new Discord.Client({
 const cron = require('node-cron')
 const getGenshinCode = require('./getGenshinCode')
 const SubscribeChannel = require('./models/SubscribeChannel')
-const mongooseConnect = require('./mongoose')
 const GiftCode = require('./models/GiftCodes')
 
 let isReady = false
@@ -33,9 +32,12 @@ const rest = new Discord.REST({ version: '10' }).setToken(
   try {
     console.log('Started refreshing application (/) commands.')
 
-    await rest.put(Discord.Routes.applicationCommands('1076820373947035688'), {
-      body: commands,
-    })
+    await rest.put(
+      Discord.Routes.applicationCommands(process.env.DISCORD_CLIENT_ID),
+      {
+        body: commands,
+      }
+    )
 
     console.log('Successfully reloaded application (/) commands.')
   } catch (error) {
@@ -99,8 +101,8 @@ client.on('interactionCreate', (message) => {
   }
 })
 
-// every 15 minute
-cron.schedule('*/15 * * * *', async () => {
+// every 1 minute
+cron.schedule('*/1 * * * *', async () => {
   if (isReady) {
     ;(async () => {
       const codes = await getGenshinCode()
@@ -140,7 +142,7 @@ cron.schedule('*/15 * * * *', async () => {
         client.channels.cache.get(channel.channelId).send({ embeds: [embed] })
       })
 
-      await GiftCode.insertMany(codes)
+      if (subscribedChannels?.length > 0) await GiftCode.insertMany(codes)
     })()
   }
 })
