@@ -111,38 +111,43 @@ cron.schedule('*/1 * * * *', async () => {
         return
       }
 
-      const embed = new Discord.EmbedBuilder()
-        .setColor('#4a5969')
-        .setTitle("Redeem New Genshin's Gift Code Now!")
-        .setURL('https://genshin.hoyoverse.com/en/gift')
-        .setAuthor({
-          name: 'Primord',
-          iconURL: 'https://i.imgur.com/WZw0g7b.jpg',
-          url: 'https://genshin.hoyoverse.com/en/gift',
-        })
-        .setDescription("New Genshin's Gift Code Updated!")
-        .addFields(
-          codes.map((c) => {
-            return {
-              name: c.code,
-              value: c.description,
-              inline: false,
-            }
+      // Split code into 25 codes per embed
+      for (let i = 0; i < codes.length; i += 25) {
+        const embed = new Discord.EmbedBuilder()
+          .setColor('#4a5969')
+          .setTitle("Redeem New Genshin's Gift Code Now!")
+          .setURL('https://genshin.hoyoverse.com/en/gift')
+          .setAuthor({
+            name: 'Primord',
+            iconURL: 'https://i.imgur.com/WZw0g7b.jpg',
+            url: 'https://genshin.hoyoverse.com/en/gift',
           })
-        )
-        .setTimestamp()
-        .setImage('https://i.imgur.com/po12gAt.png')
-        .setFooter({
-          text: 'Primord',
-          iconURL: 'https://i.imgur.com/WZw0g7b.jpg',
+          .setDescription("New Genshin's Gift Code Updated!")
+          .addFields(
+            codes
+              .map((c) => {
+                return {
+                  name: c.code,
+                  value: c.description,
+                  inline: false,
+                }
+              })
+              .slice(i, i + 25)
+          )
+          .setTimestamp()
+          .setImage('https://i.imgur.com/po12gAt.png')
+          .setFooter({
+            text: 'Primord',
+            iconURL: 'https://i.imgur.com/WZw0g7b.jpg',
+          })
+
+        const subscribedChannels = await SubscribeChannel.find()
+        subscribedChannels.forEach((channel) => {
+          client.channels.cache.get(channel.channelId).send({ embeds: [embed] })
         })
+      }
 
-      const subscribedChannels = await SubscribeChannel.find()
-      subscribedChannels.forEach((channel) => {
-        client.channels.cache.get(channel.channelId).send({ embeds: [embed] })
-      })
-
-      if (subscribedChannels?.length > 0) await GiftCode.insertMany(codes)
+      await GiftCode.insertMany(codes)
     })()
   }
 })
