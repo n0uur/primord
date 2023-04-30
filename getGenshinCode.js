@@ -1,6 +1,9 @@
 const cheerio = require('cheerio')
-const GiftCode = require('./models/GiftCodes')
-
+let GiftCode
+// Not good, but it help me alot when I want to test this file
+if (require.main !== module) {
+  GiftCode = require('./models/GiftCodes')
+}
 const getCodeFromPockettactics = async () => {
   const codes = []
 
@@ -29,7 +32,7 @@ const getCodeFromPockettactics = async () => {
               code,
               description: $(li)
                 .text()
-                .split('–')[1]
+                .split('—')[1]
                 .replace('(new!)', '')
                 .trim(),
             })
@@ -64,8 +67,8 @@ const getCodeFromProgameguides = async () => {
 
       if (code !== '' && code === code.toUpperCase()) {
         codes.push({
-          code,
-          description: $(li).text().split('–')[1],
+          code: code.replace('—', ''),
+          description: $(li).text().split('—')[1],
         })
       }
     }
@@ -77,14 +80,21 @@ const getCodeFromProgameguides = async () => {
 const getGenshinCode = async () => {
   const codes = []
 
-  const pockettacticsCodes = await getCodeFromPockettactics()
+  // const pockettacticsCodes = await getCodeFromPockettactics()
+  const pockettacticsCodes = []
   const progameguidesCodes = await getCodeFromProgameguides()
 
-  pockettacticsCodes.forEach((code) => {
-    if (progameguidesCodes.find((c) => c.code === code.code)) {
-      codes.push(code)
-    }
-  })
+  codes.push(...progameguidesCodes)
+
+  // pockettacticsCodes.forEach((code) => {
+  //   if (progameguidesCodes.find((c) => c.code === code.code)) {
+  //     codes.push(code)
+  //   }
+  // })
+
+  if (require.main === module) {
+    return codes
+  }
 
   const giftCodes = await GiftCode.find()
   const filteredCodes = codes.filter((code) => {
@@ -92,6 +102,13 @@ const getGenshinCode = async () => {
   })
 
   return filteredCodes
+}
+
+if (require.main === module) {
+  ;(async () => {
+    const codes = await getGenshinCode()
+    console.log(codes)
+  })()
 }
 
 module.exports = getGenshinCode
