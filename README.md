@@ -1,9 +1,10 @@
-# Primord - Genshin Impact Gift Code Notifier Bot
-Primord is a Discord bot built with discord.js that automatically notifies users when a new Genshin Impact gift code becomes available for redeem.
+# Primord - "Genshin Impact" and "Honkai: Star Rail" Gift Code Notifier Bot
+Primord is a Discord bot built with discord.js that automatically notifies users when a new Genshin Impact and Honkai: Star Rail gift code becomes available for redeem.
 The bot periodically checks online Genshin Impact community websites for new codes and sends a notification message to subscribed users in a designated Discord channel.
 
 ## Features
-- Automated notifications for new Genshin Impact gift codes.
+- Automated notifications for new `Genshin Impact` gift codes.
+- Automated notifications for new `Honkai: Star Rail` gift codes.
 - User-friendly commands for subscribing or unsubscribing from notifications.
 
 ## Prerequisites
@@ -27,6 +28,7 @@ Once the bot is running, you can use the following commands:
 ## Screenshot
 ![image](https://user-images.githubusercontent.com/50010805/220254846-03a7b05e-e8e9-4be7-b4c7-8d75abf48061.png)
 
+![image](https://github.com/n0uur/primord/assets/50010805/c444c79d-53a8-46dc-907f-dee59138b7bf)
 
 ## Contributing
 Contributions and PR(s) are welcome!
