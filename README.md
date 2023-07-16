@@ -7,15 +7,22 @@ The bot periodically checks online Genshin Impact community websites for new cod
 - Automated notifications for new `Honkai: Star Rail` gift codes.
 - User-friendly commands for subscribing or unsubscribing from notifications.
 
-## Prerequisites
+## Getting Started
+
+### Invitation
+
+[Invite **Primord** into your server](https://discord.com/api/oauth2/authorize?client_id=1076820373947035688&permissions=412317206528&scope=bot)
+
+### Self Hosted
+To use Primord in your Discord server, follow these steps:
+
+#### Prerequisites
 
 Before using Primord, you must have the following:
 - A Discord Bot Application with a bot token. See the [Discord Developer Portal](https://discord.com/developers/docs/intro) for more information on creating a bot.
 - A MongoDB instance. See the [MongoDB website](https://www.mongodb.com/) for more information on getting started with MongoDB.
 
-## Getting Started
-To use Primord in your Discord server, follow these steps:
-
+#### Setup
 1. Create a new Discord application.
 2. Create a bot user for your application and copy the bot token.
 3. Clone this repository and run `yarn install` to install dependencies.
