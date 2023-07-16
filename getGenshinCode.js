@@ -69,6 +69,7 @@ const getCodeFromProgameguides = async () => {
         codes.push({
           code: code.replace('—', ''),
           description: $(li).text().split('—')[1],
+          type: 'genshin',
         })
       }
     }
@@ -96,7 +97,9 @@ const getGenshinCode = async () => {
     return codes
   }
 
-  const giftCodes = await GiftCode.find()
+  const giftCodes = await GiftCode.find({
+    $or: [{ type: 'genshin' }, { type: undefined }],
+  })
   const filteredCodes = codes.filter((code) => {
     return !giftCodes.find((c) => c.code === code.code)
   })
