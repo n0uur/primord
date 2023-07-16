@@ -10,6 +10,7 @@ const client = new Discord.Client({
 })
 const cron = require('node-cron')
 const getGenshinCode = require('./getGenshinCode')
+const getStarRailCode = require('./getStarRailCode')
 const SubscribeChannel = require('./models/SubscribeChannel')
 const GiftCode = require('./models/GiftCodes')
 
@@ -102,9 +103,10 @@ client.on('interactionCreate', (message) => {
 })
 
 // every 1 minute
-cron.schedule('*/1 * * * *', async () => {
+cron.schedule('* * * * *', async () => {
   if (isReady) {
     ;(async () => {
+      // Genshin Impact Codes...
       const codes = await getGenshinCode()
 
       if (codes.length === 0) {
@@ -148,6 +150,52 @@ cron.schedule('*/1 * * * *', async () => {
       }
 
       await GiftCode.insertMany(codes)
+    })()
+    ;(async () => {
+      // Honkai Star Rail Codes...
+      const starRailCodes = await getStarRailCode()
+
+      if (starRailCodes.length === 0) {
+        return
+      }
+
+      // Split code into 25 codes per embed
+      for (let i = 0; i < starRailCodes.length; i += 25) {
+        const embed = new Discord.EmbedBuilder()
+          .setColor('#4a5969')
+          .setTitle("Redeem New Honkai: Star Rail's Gift Code Now!")
+          .setURL('https://hsr.hoyoverse.com/gift')
+          .setAuthor({
+            name: 'Primord',
+            iconURL: 'https://i.imgur.com/WZw0g7b.jpg',
+            url: 'https://hsr.hoyoverse.com/gift',
+          })
+          .setDescription("New Honkai: Star Rail's Gift Code Updated!")
+          .addFields(
+            starRailCodes
+              .map((c) => {
+                return {
+                  name: c.code,
+                  value: c.description,
+                  inline: false,
+                }
+              })
+              .slice(i, i + 25)
+          )
+          .setTimestamp()
+          .setImage('https://i.imgur.com/CgtZS3L.png')
+          .setFooter({
+            text: 'Primord',
+            iconURL: 'https://i.imgur.com/WZw0g7b.jpg',
+          })
+
+        const subscribedChannels = await SubscribeChannel.find()
+        subscribedChannels.forEach((channel) => {
+          client.channels.cache.get(channel.channelId).send({ embeds: [embed] })
+        })
+      }
+
+      await GiftCode.insertMany(starRailCodes)
     })()
   }
 })
