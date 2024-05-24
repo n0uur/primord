@@ -146,7 +146,7 @@ cron.schedule('* * * * *', async () => {
 
         const subscribedChannels = await SubscribeChannel.find()
         subscribedChannels.forEach((channel) => {
-          client.channels.cache.get(channel.channelId).send({ embeds: [embed] })
+          client.channels.cache.get(channel.channelId)?.send({ embeds: [embed] })
         })
       }
 
@@ -191,9 +191,15 @@ cron.schedule('* * * * *', async () => {
           })
 
         const subscribedChannels = await SubscribeChannel.find()
-        subscribedChannels.forEach((channel) => {
-          client.channels.cache.get(channel.channelId).send({ embeds: [embed] })
-        })
+        await Promise.all(subscribedChannels.map(async (channel) => {
+          // if (!client.channels.cache.get(channel.channelId)) {
+          //   // maybe they just doesn't love primon anymore...
+          //   await SubscribeChannel.deleteOne({
+          //     channelId: channel.channelId,
+          //   })
+          // }
+          client.channels.cache.get(channel.channelId)?.send({ embeds: [embed] })
+        }))
       }
 
       await GiftCode.insertMany(starRailCodes)
