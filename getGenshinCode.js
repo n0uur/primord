@@ -53,7 +53,7 @@ const getCodeFromProgameguides = async () => {
   const html = await response.text()
   const $ = cheerio.load(html)
 
-  const lis = $('div.entry-content').find('li')
+  const lis = $('.wp-block-gamurs-article-content').find('li')
   lis.each((i, li) => {
     if ($(li).find('a').length > 0) {
       return
@@ -68,7 +68,7 @@ const getCodeFromProgameguides = async () => {
       if (code !== '' && code === code.toUpperCase()) {
         codes.push({
           code: code.replace('—', ''),
-          description: $(li).text().split('—')[1],
+          description: $(li).text().split('—')[1] || '',
           type: 'genshin',
         })
       }

@@ -114,7 +114,8 @@ cron.schedule('* * * * *', async () => {
       }
 
       // Split code into 25 codes per embed
-      for (let i = 0; i < codes.length; i += 25) {
+
+      for (let i = 0; i < codes.length; i += 10) {
         const embed = new Discord.EmbedBuilder()
           .setColor('#4a5969')
           .setTitle("Redeem New Genshin's Gift Code Now!")
@@ -129,12 +130,12 @@ cron.schedule('* * * * *', async () => {
             codes
               .map((c) => {
                 return {
-                  name: c.code,
-                  value: c.description,
+                  name: c.code || '-',
+                  value: c.description || '-',
                   inline: false,
                 }
               })
-              .slice(i, i + 25)
+              .slice(i, i + 10)
           )
           .setTimestamp()
           .setImage('https://i.imgur.com/po12gAt.png')
@@ -160,7 +161,7 @@ cron.schedule('* * * * *', async () => {
       }
 
       // Split code into 25 codes per embed
-      for (let i = 0; i < starRailCodes.length; i += 25) {
+      for (let i = 0; i < starRailCodes.length; i += 10) {
         const embed = new Discord.EmbedBuilder()
           .setColor('#4a5969')
           .setTitle("Redeem New Honkai: Star Rail's Gift Code Now!")
@@ -180,7 +181,7 @@ cron.schedule('* * * * *', async () => {
                   inline: false,
                 }
               })
-              .slice(i, i + 25)
+              .slice(i, i + 10)
           )
           .setTimestamp()
           .setImage('https://i.imgur.com/CgtZS3L.png')
