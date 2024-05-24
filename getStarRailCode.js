@@ -26,7 +26,7 @@ const getCodeFromProgameguides = async () => {
 
       const code = $(li).find('strong').first().text()
 
-      if (code !== '' && code === code.toUpperCase()) {
+      if (code && code !== '' && code === code.toUpperCase()) {
         codes.push({
           code: code.replace('—', ''),
           description: $(li).text().split('—')[1] || '-',
