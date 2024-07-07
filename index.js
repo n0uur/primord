@@ -11,6 +11,7 @@ const client = new Discord.Client({
 const cron = require('node-cron')
 const getGenshinCode = require('./getGenshinCode')
 const getStarRailCode = require('./getStarRailCode')
+const getZzzCode = require('./getZzzCode')
 const SubscribeChannel = require('./models/SubscribeChannel')
 const GiftCode = require('./models/GiftCodes')
 
@@ -146,7 +147,9 @@ cron.schedule('* * * * *', async () => {
 
         const subscribedChannels = await SubscribeChannel.find()
         subscribedChannels.forEach((channel) => {
-          client.channels.cache.get(channel.channelId)?.send({ embeds: [embed] })
+          client.channels.cache
+            .get(channel.channelId)
+            ?.send({ embeds: [embed] })
         })
       }
 
@@ -191,18 +194,70 @@ cron.schedule('* * * * *', async () => {
           })
 
         const subscribedChannels = await SubscribeChannel.find()
-        await Promise.all(subscribedChannels.map(async (channel) => {
-          // if (!client.channels.cache.get(channel.channelId)) {
-          //   // maybe they just doesn't love primon anymore...
-          //   await SubscribeChannel.deleteOne({
-          //     channelId: channel.channelId,
-          //   })
-          // }
-          client.channels.cache.get(channel.channelId)?.send({ embeds: [embed] })
-        }))
+        await Promise.all(
+          subscribedChannels.map(async (channel) => {
+            // if (!client.channels.cache.get(channel.channelId)) {
+            //   // maybe they just doesn't love primon anymore...
+            //   await SubscribeChannel.deleteOne({
+            //     channelId: channel.channelId,
+            //   })
+            // }
+            client.channels.cache
+              .get(channel.channelId)
+              ?.send({ embeds: [embed] })
+          })
+        )
       }
 
       await GiftCode.insertMany(starRailCodes)
+    })()
+    ;(async () => {
+      // Zenless Zone Zero Codes...
+      const ZzzCodes = await getZzzCode()
+
+      if (ZzzCodes.length === 0) {
+        return
+      }
+
+      // Split code into 25 codes per embed
+      for (let i = 0; i < ZzzCodes.length; i += 25) {
+        const embed = new Discord.EmbedBuilder()
+          .setColor('#4a5969')
+          .setTitle("Redeem Zenless Zone Zero's Gift Code Now!")
+          .setURL('https://zenless.hoyoverse.com/redemption')
+          .setAuthor({
+            name: 'Primord',
+            iconURL: 'https://i.imgur.com/WZw0g7b.jpg',
+            url: 'https://zenless.hoyoverse.com/redemption',
+          })
+          .setDescription("Zenless Zone Zero's Gift Code Updated!")
+          .addFields(
+            ZzzCodes.map((c) => {
+              return {
+                name: c.code,
+                value: c.description,
+                inline: false,
+              }
+            }).slice(i, i + 25)
+          )
+          .setTimestamp()
+          .setImage('https://i.imgur.com/fF0m1uh.png')
+          .setFooter({
+            text: 'Primord',
+            iconURL: 'https://i.imgur.com/WZw0g7b.jpg',
+          })
+
+        const subscribedChannels = await SubscribeChannel.find()
+        await Promise.all(
+          subscribedChannels.map(async (channel) => {
+            client.channels.cache
+              .get(channel.channelId)
+              ?.send({ embeds: [embed] })
+          })
+        )
+      }
+
+      await GiftCode.insertMany(ZzzCodes)
     })()
   }
 })
