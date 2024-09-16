@@ -152,9 +152,13 @@ cron.schedule('* * * * *', async () => {
         //     ?.send({ embeds: [embed] })
         await Promise.all(
           subscribedChannels.map(async (channel) => {
-            await client.channels.cache
-              .get(channel.channelId)
-              ?.send({ embeds: [embed] })
+            try {
+              await client.channels.cache
+                .get(channel.channelId)
+                ?.send({ embeds: [embed] })
+            } catch (err) {
+              console.error(err)
+            }
           })
         )
       }
@@ -208,9 +212,13 @@ cron.schedule('* * * * *', async () => {
             //     channelId: channel.channelId,
             //   })
             // }
-            await client.channels.cache
-              .get(channel.channelId)
-              ?.send({ embeds: [embed] })
+            try {
+              await client.channels.cache
+                .get(channel.channelId)
+                ?.send({ embeds: [embed] })
+            } catch (err) {
+              console.error(err)
+            }
           })
         )
       }
@@ -256,9 +264,13 @@ cron.schedule('* * * * *', async () => {
         const subscribedChannels = await SubscribeChannel.find()
         await Promise.all(
           subscribedChannels.map(async (channel) => {
-            await client.channels.cache
-              .get(channel.channelId)
-              ?.send({ embeds: [embed] })
+            try {
+              await client.channels.cache
+                .get(channel.channelId)
+                ?.send({ embeds: [embed] })
+            } catch (err) {
+              console.error(err)
+            }
           })
         )
       }
