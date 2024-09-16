@@ -146,11 +146,17 @@ cron.schedule('* * * * *', async () => {
           })
 
         const subscribedChannels = await SubscribeChannel.find()
-        subscribedChannels.forEach((channel) => {
-          client.channels.cache
-            .get(channel.channelId)
-            ?.send({ embeds: [embed] })
-        })
+        // subscribedChannels.forEach((channel) => {
+        //   client.channels.cache
+        //     .get(channel.channelId)
+        //     ?.send({ embeds: [embed] })
+        await Promise.all(
+          subscribedChannels.map(async (channel) => {
+            await client.channels.cache
+              .get(channel.channelId)
+              ?.send({ embeds: [embed] })
+          })
+        )
       }
 
       await GiftCode.insertMany(codes)
@@ -202,7 +208,7 @@ cron.schedule('* * * * *', async () => {
             //     channelId: channel.channelId,
             //   })
             // }
-            client.channels.cache
+            await client.channels.cache
               .get(channel.channelId)
               ?.send({ embeds: [embed] })
           })
@@ -250,7 +256,7 @@ cron.schedule('* * * * *', async () => {
         const subscribedChannels = await SubscribeChannel.find()
         await Promise.all(
           subscribedChannels.map(async (channel) => {
-            client.channels.cache
+            await client.channels.cache
               .get(channel.channelId)
               ?.send({ embeds: [embed] })
           })
